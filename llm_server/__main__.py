@@ -27,6 +27,7 @@ if __name__ == "__main__":
     if args.hf_token is not None:
         login(token=args.hf_token)
 
+    # Init model
     if args.model == 'llama-4-scout':
         model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size)
     elif args.model == 'qwen-3-next':
