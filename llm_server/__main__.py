@@ -1,8 +1,9 @@
 import flask
 import os
 import argparse
+import logging
 from huggingface_hub import login
-from .model import BaseModel, app
+from .model import app
 from .llama import Llama4ScoutModel
 from .qwen import Qwen3NextModel, Qwen3Model
 from .gpt import GPT5Model, GPT4NanoModel
@@ -19,15 +20,22 @@ if __name__ == "__main__":
                         help='Hugging Face token for private model access.')
     parser.add_argument('-p', '--port', type=int, default=5000,
                         help='Port to run the server on.')
+    parser.add_argument('--log-debug', action='store_true',
+                        help='Enable debug level logging.')
     args = parser.parse_args()
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
 
     if args.gpu_id is not None:
+        logger.info(f"Using GPUs: {args.gpu_id}")
         os.environ['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, args.gpu_id))
     os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID' # Ensure consistent GPU ordering
     if args.hf_token is not None:
+        logger.info("Logging in to Hugging Face Hub")
         login(token=args.hf_token)
 
     # Init model
+    logger.info(f"Loading model: {args.model}")
     if args.model == 'llama-4-scout':
         model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size)
     elif args.model == 'qwen-3-next':
@@ -43,10 +51,12 @@ if __name__ == "__main__":
     
     @app.route('/request', methods=['POST'])
     def handle_request():
+        logger.info("Received request")
         data:dict = flask.request.json
         system_msg = data['system_msg']
         prompt = data['prompt']
         response = model.request(system_msg, prompt)
         return flask.jsonify({'response': response})
 
+    logger.info(f"Starting server on port {args.port}")
     app.run(host='127.0.0.1', port=args.port)
