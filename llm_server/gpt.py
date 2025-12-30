@@ -19,6 +19,7 @@ class GPT5Model(BaseModel):
             model='gpt-5',
             max_completion_tokens=10240,
         )
+        self.logger.debug(f'Generation outputs: {response}')
 
         return response.choices[0].message.content
     
@@ -38,5 +39,6 @@ class GPT4NanoModel(BaseModel):
             model='gpt-4.1-nano',
             max_completion_tokens=4096,
         )
+        self.logger.debug(f'Generation outputs: {response}')
 
         return response.choices[0].message.content

@@ -30,7 +30,7 @@ class Qwen3NextModel(BaseModel):
         inputs = self.model.get_tokenizer().apply_chat_template(
             message,
             add_generation_prompt=True,
-            tokenize=True
+            tokenize=False
         )
         sampling_params = SamplingParams(max_tokens=2048, temperature=0.1)
 
@@ -38,6 +38,7 @@ class Qwen3NextModel(BaseModel):
             [inputs],
             sampling_params=sampling_params
         )
+        self.logger.debug(f'Generation outputs: {outputs[0].outputs[0]}')
 
         return outputs[0].outputs[0].text
     
@@ -68,7 +69,7 @@ class Qwen3Model(BaseModel):
         inputs = self.model.get_tokenizer().apply_chat_template(
             message,
             add_generation_prompt=True,
-            tokenize=True
+            tokenize=False
         )
         sampling_params = SamplingParams(max_tokens=2048, temperature=0.1)
 
@@ -76,5 +77,6 @@ class Qwen3Model(BaseModel):
             [inputs],
             sampling_params=sampling_params
         )
+        self.logger.debug(f'Generation outputs: {outputs[0].outputs[0]}')
 
         return outputs[0].outputs[0].text

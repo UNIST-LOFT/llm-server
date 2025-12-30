@@ -1,3 +1,4 @@
+import time
 import flask
 import os
 import argparse
@@ -51,11 +52,13 @@ if __name__ == "__main__":
     
     @app.route('/request', methods=['POST'])
     def handle_request():
-        logger.info("Received request")
+        logger.debug("Received request")
         data:dict = flask.request.json
         system_msg = data['system_msg']
         prompt = data['prompt']
+        start_time = time.time()
         response = model.request(system_msg, prompt)
+        logger.info(f"Request processed in {time.time() - start_time:.2f} seconds")
         return flask.jsonify({'response': response})
 
     logger.info(f"Starting server on port {args.port}")
