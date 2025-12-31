@@ -6,13 +6,13 @@ from .model import *
 class Qwen3NextModel(BaseModel):
     MODEL_NAME = 'Qwen/Qwen3-Next-80B-A3B-Instruct'
 
-    def __init__(self, tensor_parallel_size: int = 1):
+    def __init__(self, tensor_parallel_size: int = 1, max_model_len: int = 8192):
         super().__init__()
         self.logger.info('Initializing Qwen 3 Next model client...')
         self.model = LLM(model=self.MODEL_NAME,
                          dtype='bfloat16',
                          tensor_parallel_size=tensor_parallel_size,
-                         max_model_len=4096,
+                         max_model_len=max_model_len,
                          gpu_memory_utilization=0.85)
 
     def request(self, system_msg: str, prompt: str):
@@ -45,13 +45,13 @@ class Qwen3NextModel(BaseModel):
 class Qwen3Model(BaseModel):
     MODEL_NAME = 'Qwen/Qwen3-1.7B'
 
-    def __init__(self, tensor_parallel_size: int = 1):
+    def __init__(self, tensor_parallel_size: int = 1, max_model_len: int = 8192):
         super().__init__()
         self.logger.info(f'Initializing {self.MODEL_NAME} model client...')
         self.model = LLM(model=self.MODEL_NAME,
                          dtype='bfloat16',
                          tensor_parallel_size=tensor_parallel_size,
-                         max_model_len=4096,
+                         max_model_len=max_model_len,
                          gpu_memory_utilization=0.85)
 
     def request(self, system_msg: str, prompt: str):

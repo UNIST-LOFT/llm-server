@@ -6,13 +6,13 @@ from .model import *
 class Llama4ScoutModel(BaseModel):
     MODEL_NAME = 'meta-llama/Llama-4-Scout-17B-16E-Instruct'
 
-    def __init__(self, tensor_parallel_size: int = 1):
+    def __init__(self, tensor_parallel_size: int = 1, max_model_len: int = 8192):
         super().__init__()
         self.logger.info('Initializing Llama-4 Scout model client...')
         self.model = LLM(model=self.MODEL_NAME,
                          dtype='bfloat16',
                          tensor_parallel_size=tensor_parallel_size,
-                         max_model_len=4096,
+                         max_model_len=max_model_len,
                          gpu_memory_utilization=0.85)
 
     def request(self, system_msg: str, prompt: str):

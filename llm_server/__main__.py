@@ -23,6 +23,8 @@ if __name__ == "__main__":
                         help='Port to run the server on.')
     parser.add_argument('--log-debug', action='store_true',
                         help='Enable debug level logging.')
+    parser.add_argument('--max-tokens', type=int, default=8192,
+                        help='Max length of tokens for model (prompt + response). Defualt: 8192')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
@@ -38,11 +40,11 @@ if __name__ == "__main__":
     # Init model
     logger.info(f"Loading model: {args.model}")
     if args.model == 'llama-4-scout':
-        model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size)
+        model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
     elif args.model == 'qwen-3-next':
-        model = Qwen3NextModel(tensor_parallel_size=args.tensor_parallel_size)
+        model = Qwen3NextModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
     elif args.model == 'qwen-3':
-        model = Qwen3Model(tensor_parallel_size=args.tensor_parallel_size)
+        model = Qwen3Model(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
     elif args.model == 'gpt-5':
         model = GPT5Model()
     elif args.model == 'gpt-4-nano':
