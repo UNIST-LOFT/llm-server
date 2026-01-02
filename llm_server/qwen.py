@@ -15,7 +15,7 @@ class Qwen3NextModel(BaseModel):
                          max_model_len=max_model_len,
                          gpu_memory_utilization=0.85)
 
-    def request(self, system_msg: str, prompt: str):
+    def request(self, system_msg: str, prompt: str, temperature: float = 0.0):
         message = [
             {
                 "role": "system",
@@ -32,7 +32,7 @@ class Qwen3NextModel(BaseModel):
             add_generation_prompt=True,
             tokenize=False
         )
-        sampling_params = SamplingParams(max_tokens=2048, temperature=0.1)
+        sampling_params = SamplingParams(max_tokens=2048, temperature=temperature)
 
         outputs = self.model.generate(
             [inputs],
@@ -54,7 +54,7 @@ class Qwen3Model(BaseModel):
                          max_model_len=max_model_len,
                          gpu_memory_utilization=0.85)
 
-    def request(self, system_msg: str, prompt: str):
+    def request(self, system_msg: str, prompt: str, temperature: float = 0.0):
         message = [
             {
                 "role": "system",
@@ -71,7 +71,7 @@ class Qwen3Model(BaseModel):
             add_generation_prompt=True,
             tokenize=False
         )
-        sampling_params = SamplingParams(max_tokens=2048, temperature=0.1)
+        sampling_params = SamplingParams(max_tokens=2048, temperature=temperature)
 
         outputs = self.model.generate(
             [inputs],

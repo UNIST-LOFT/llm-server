@@ -10,7 +10,7 @@ class GPT5Model(BaseModel):
         self.api_key = os.environ['OPENAI_API_KEY']
         self.client = OpenAI(api_key=self.api_key)
 
-    def request(self, system_msg: str, prompt: str) -> str:
+    def request(self, system_msg: str, prompt: str, temperature: float = 0.0) -> str:
         response = self.client.chat.completions.create(
             messages=[
                 {'role': 'developer', 'content': system_msg},
@@ -18,6 +18,7 @@ class GPT5Model(BaseModel):
             ],
             model='gpt-5',
             max_completion_tokens=10240,
+            temperature=temperature
         )
         self.logger.debug(f'Generation outputs: {response}')
 
@@ -30,7 +31,7 @@ class GPT4NanoModel(BaseModel):
         self.api_key = os.environ['OPENAI_API_KEY']
         self.client = OpenAI(api_key=self.api_key)
 
-    def request(self, system_msg: str, prompt: str) -> str:
+    def request(self, system_msg: str, prompt: str, temperature: float = 0.0) -> str:
         response = self.client.chat.completions.create(
             messages=[
                 {'role': 'system', 'content': system_msg},
@@ -38,6 +39,7 @@ class GPT4NanoModel(BaseModel):
             ],
             model='gpt-4.1-nano',
             max_completion_tokens=4096,
+            temperature=temperature
         )
         self.logger.debug(f'Generation outputs: {response}')
 

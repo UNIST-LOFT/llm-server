@@ -25,6 +25,7 @@ if __name__ == "__main__":
                         help='Enable debug level logging.')
     parser.add_argument('--max-tokens', type=int, default=8192,
                         help='Max length of tokens for model (prompt + response). Defualt: 8192')
+    parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for model')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         system_msg = data['system_msg']
         prompt = data['prompt']
         start_time = time.time()
-        response = model.request(system_msg, prompt)
+        response = model.request(system_msg, prompt, args.temperature)
         logger.info(f"Request processed in {time.time() - start_time:.2f} seconds")
         return flask.jsonify({'response': response})
 
