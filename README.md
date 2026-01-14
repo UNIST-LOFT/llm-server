@@ -50,6 +50,32 @@ Options:
 * `--temperature`: Temperature for sampling. Default: 0.0
 * `--log-debug`: Enable debug logging
 
+## Get a response
+
+Send a POST request with json body to communicate with LLM.
+
+The body should follow the format below:
+```json
+{
+  "system_msg": "<system message>",
+  "prompt": "<prompt>"
+}
+```
+
+Usually, sending POST request can simply be done by using Python `requests` library.
+For example,
+```python
+import requests
+response = requests.post('http://localhost:<port>/request', json=input).json()
+```
+Replace `<post>` to proper port (default: 5000) and `input` to json input.
+
+To use the response:
+```python
+response['response']
+```
+This code will give a string of response.
+
 ### Available Models
 
 #### Local LLMs
