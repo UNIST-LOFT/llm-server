@@ -1,5 +1,5 @@
 # LLM-Server
-A server to run and use local and commercial LLM easier.
+A Python Flask server to run and use local and commercial LLM easier.
 
 ## Supported Models
 
@@ -30,4 +30,37 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-:warning: Note: Pytorch are not included in requirements. Please install Pytorch separately according to your system and CUDA version. See https://pytorch.org/get-started/locally/ for more details.
+:warning: Note: PyTorch is not included in requirements.txt. Please install PyTorch separately according to your system and CUDA version. See https://pytorch.org/get-started/locally/ to install locally.
+
+## How to run the server
+
+Run the following command to start the server:
+
+```bash
+python -m llm_server <options> <model_name>
+```
+Replace `<model_name>` with the desired model from the list below (e.g., `qwen-3-next`).
+
+Options:
+* `-j`, `--tensor-parallel-size`: Number of GPUs to use for tensor parallelism (default: 1)
+* `--gpu-id`: Space seperated list of GPU ids to use. Starts from 0. For example, `--gpu-id 0 1 2` to use first three GPUs. (default: all available GPUs)
+* `--hf-token`: Hugging Face token for downloading models from Hugging Face Hub. Required for some models (e.g., Llama)
+* `-p`, `--port`: Port to run the server on (default: 5000)
+* `--max-tokens`: Maximum tokens for model (prompt + response). Default: 8192
+* `--temperature`: Temperature for sampling. Default: 0.0
+* `--log-debug`: Enable debug logging
+
+### Available Models
+
+#### Local LLMs
+
+Before running server, we highly recommend downloading the local LLMs with `transformers` library (Takes several hours).
+
+* `llama-4-scout`: Llama-4 Scout 17B 16E Instruct (Requires Hugging Face token)
+* `qwen-3-next`: Qwen 3 Next 80B A3B Instruct
+* `qwen-3`: Qwen 3 1.7B
+
+#### Commercial LLMs
+
+* `gpt-5`: GPT-5 (Requires OPENAI_API_KEY environment variable)
+* `gpt-4-nano`: GPT-4.1-nano (Requires OPENAI_API_KEY environment variable)
