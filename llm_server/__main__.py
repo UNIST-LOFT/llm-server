@@ -17,6 +17,8 @@ if __name__ == "__main__":
                         help='Tensor parallel size for model loading.')
     parser.add_argument('--gpu-id', nargs='+', type=int, default=None,
                         help='List of GPU IDs to use for model loading.')
+    parser.add_argument('--gpu-mem-utilization', type=float, default=0.85,
+                        help='GPU memory utilization for model loading. Default: 0.85')
     parser.add_argument('--hf-token', type=str, default=None,
                         help='Hugging Face token for private model access.')
     parser.add_argument('-p', '--port', type=int, default=5000,
@@ -25,6 +27,8 @@ if __name__ == "__main__":
                         help='Enable debug level logging.')
     parser.add_argument('--max-tokens', type=int, default=8192,
                         help='Max length of tokens for model (prompt + response). Defualt: 8192')
+    parser.add_argument('--param-max-tokens', type=int, default=2048,
+                        help='Max length of tokens for response. Defualt: 2048')
     parser.add_argument('--temperature', type=float, default=0.0, help='Temperature for model')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
@@ -41,11 +45,11 @@ if __name__ == "__main__":
     # Init model
     logger.info(f"Loading model: {args.model}")
     if args.model == 'llama-4-scout':
-        model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
+        model = Llama4ScoutModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens, gpu_mem_utilization=args.gpu_mem_utilization, param_max_tokens=args.param_max_tokens)
     elif args.model == 'qwen-3-next':
-        model = Qwen3NextModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
+        model = Qwen3NextModel(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens, gpu_mem_utilization=args.gpu_mem_utilization, param_max_tokens=args.param_max_tokens)
     elif args.model == 'qwen-3':
-        model = Qwen3Model(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens)
+        model = Qwen3Model(tensor_parallel_size=args.tensor_parallel_size, max_model_len=args.max_tokens, gpu_mem_utilization=args.gpu_mem_utilization, param_max_tokens=args.param_max_tokens)
     elif args.model == 'gpt-5':
         model = GPT5Model()
     elif args.model == 'gpt-4-nano':
