@@ -11,14 +11,14 @@ class GPT5Model(BaseModel):
         self.client = OpenAI(api_key=self.api_key)
 
     def request(self, system_msg: str, prompt: str, temperature: float = 0.0) -> str:
+        # Temperature not available for GPT-5
         response = self.client.chat.completions.create(
             messages=[
                 {'role': 'developer', 'content': system_msg},
                 {'role': 'user', 'content': prompt},
             ],
             model='gpt-5',
-            max_completion_tokens=10240,
-            temperature=temperature
+            max_completion_tokens=10240
         )
         self.logger.debug(f'Generation outputs: {response}')
 
