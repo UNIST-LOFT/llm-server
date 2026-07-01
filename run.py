@@ -8,6 +8,8 @@ MODELS = {
     'llama-3-2': 'meta-llama/Llama-3.2-1B-Instruct',
     'qwen-3-next': 'Qwen/Qwen3-Next-80B-A3B-Instruct',
     'qwen-3': 'Qwen/Qwen3-1.7B',
+    'qwen-3-coder-next': 'Qwen/Qwen3-Coder-Next',
+    'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash'
 }
 
 if __name__ == "__main__":
@@ -35,7 +37,10 @@ if __name__ == "__main__":
     if args.log_debug:
         os.environ['VLLM_LOGGING_LEVEL'] = 'DEBUG'
 
-    dtype = 'bfloat16'
+    if args.model in ('qwen-3-coder-next', 'deepseek-v4-flash'):
+        dtype = 'auto'
+    else:
+        dtype = 'bfloat16'
 
     cmd = [
         'vllm', 'serve', MODELS[args.model],
@@ -43,10 +48,14 @@ if __name__ == "__main__":
         '--dtype', dtype,
         '--max-model-len', str(args.max_tokens),
         '--gpu-memory-utilization', str(args.gpu_mem_utilization),
-        '--host', '127.0.0.1',
+        '--host', '0.0.0.0',
         '--port', str(args.port),
-        '--max-num-seqs', '64'
+        '--max-num-seqs', '64',
+        '--trust-remote-code',
+        '--enable-prefix-caching',
     ]
+    if args.model == 'deepseek-v4-flash':
+        cmd += ['--kv-cache-dtype', 'fp8']
 
     logger.info(f"Starting LLM server with command: {' '.join(cmd)}")
     res = subprocess.run(cmd)

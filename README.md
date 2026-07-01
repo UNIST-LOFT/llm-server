@@ -8,6 +8,9 @@ A vLLM wrapper to use local LLMs easier.
 * llama-4-scout: meta-llama/Llama-4-Scout-17B-16E-Instruct
 * llama-3-2: meta-llama/Llama-3.2-1B-Instruct
 
+Now RTX 6000 Blackwell does not support `Deepseek-V4` models.
+Use SGLang or official API instead.
+
 ### How to add more models
 Add a new model in `MODELS`.
 A key is an alias for options in command, and a value is a model name in Hugging Face.
@@ -29,12 +32,15 @@ pip install -r requirements.txt
 
 :warning: Note: PyTorch is not included in requirements.txt. Please install PyTorch separately according to your system and CUDA version. See https://pytorch.org/get-started/locally/ to install locally.
 
+For **RTX 6000 Blackwell**: currently vLLM/DeepGeMM does not fully support it.
+Please temporarily patch vLLM to disable DeepGeMM and force to use `triton` by running `patch-vllm.sh` before running the server.
+
 ### Pre-download models
 We highly recommend to pre-download the model before running llm-server.
 
 To download a model in CLI:
 ```sh
-huggingface-cli download <model>
+hf download <model>
 ```
 
 ## How to run the server
