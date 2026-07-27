@@ -9,7 +9,8 @@ MODELS = {
     'qwen-3-next': 'Qwen/Qwen3-Next-80B-A3B-Instruct',
     'qwen-3': 'Qwen/Qwen3-1.7B',
     'qwen-3-coder-next': 'Qwen/Qwen3-Coder-Next',
-    'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash'
+    'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',
+    'qwen-3-coder': 'Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8',
 }
 
 if __name__ == "__main__":
@@ -24,8 +25,8 @@ if __name__ == "__main__":
                         help='Port to run the server on.')
     parser.add_argument('--log-debug', action='store_true',
                         help='Enable debug level logging.')
-    parser.add_argument('--max-tokens', type=int, default=8192,
-                        help='Max length of tokens for model (prompt + response). Defualt: 8192')
+    parser.add_argument('--max-tokens', type=int, default=131072,
+                        help='Max length of tokens for model (prompt + response). Default: 131072')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
@@ -36,6 +37,8 @@ if __name__ == "__main__":
     os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID' # Ensure consistent GPU ordering
     if args.log_debug:
         os.environ['VLLM_LOGGING_LEVEL'] = 'DEBUG'
+    if args.model == 'qwen-3-coder':
+        os.environ['VLLM_USE_DEEP_GEMM'] = '1'
 
     if args.model in ('qwen-3-coder-next', 'deepseek-v4-flash'):
         dtype = 'auto'
@@ -53,6 +56,8 @@ if __name__ == "__main__":
         '--max-num-seqs', '64',
         '--trust-remote-code',
         '--enable-prefix-caching',
+        '--enable-expert-parallel',
+        '--enable-chunked-prefill',
     ]
     if args.model == 'deepseek-v4-flash':
         cmd += ['--kv-cache-dtype', 'fp8']
