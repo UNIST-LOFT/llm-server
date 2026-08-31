@@ -10,7 +10,8 @@ MODELS = {
     'qwen-3': 'Qwen/Qwen3-1.7B',
     'qwen-3-coder-next': 'Qwen/Qwen3-Coder-Next',
     'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',
-    'qwen-3-coder': 'Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8',
+    # 'qwen-3-coder': 'Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8',
+    'qwen-3-coder': 'nvidia/Qwen3-Coder-480B-A35B-Instruct-NVFP4', # quantized
 }
 
 if __name__ == "__main__":
@@ -61,6 +62,8 @@ if __name__ == "__main__":
     ]
     if args.model == 'deepseek-v4-flash':
         cmd += ['--kv-cache-dtype', 'fp8']
+    elif args.model == 'qwen-3-coder':
+        cmd += ['--quantization', 'fp8']
 
     logger.info(f"Starting LLM server with command: {' '.join(cmd)}")
     res = subprocess.run(cmd)
