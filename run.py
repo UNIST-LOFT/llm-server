@@ -28,6 +28,8 @@ if __name__ == "__main__":
                         help='Enable debug level logging.')
     parser.add_argument('--max-tokens', type=int, default=131072,
                         help='Max length of tokens for model (prompt + response). Default: 131072')
+    parser.add_argument('--enable-tool', action='store_true',
+                        help='Enable the use of external tools. Recommended when using LLMs in agentic.')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
@@ -64,6 +66,10 @@ if __name__ == "__main__":
         cmd += ['--kv-cache-dtype', 'fp8']
     elif args.model == 'qwen-3-coder':
         cmd += ['--quantization', 'fp8']
+    if args.enable_tool:
+        cmd += ['--enable-auto-tool-choice']
+        if 'qwen' in args.model:
+            cmd += ['--tool-call-parser', 'qwen3_coder']
 
     logger.info(f"Starting LLM server with command: {' '.join(cmd)}")
     res = subprocess.run(cmd)
