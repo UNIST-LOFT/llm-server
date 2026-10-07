@@ -30,6 +30,8 @@ if __name__ == "__main__":
                         help='Max length of tokens for model (prompt + response). Default: 131072')
     parser.add_argument('--enable-tool', action='store_true',
                         help='Enable the use of external tools. Recommended when using LLMs in agentic.')
+    parser.add_argument('-i', '--model-path', type=str, default=None,
+                        help='Path to the local model checkpoint. Overrides the default model path if provided.')
     args = parser.parse_args()
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG if args.log_debug else logging.INFO)
@@ -48,8 +50,13 @@ if __name__ == "__main__":
     else:
         dtype = 'bfloat16'
 
-    cmd = [
-        'vllm', 'serve', MODELS[args.model],
+    cmd = ['vllm', 'serve']
+    if args.model_path is not None:
+        cmd += [args.model_path, '--served-model-name', MODELS[args.model]]
+    else:
+        cmd += [MODELS[args.model]]
+
+    cmd += [
         '--tensor-parallel-size', str(len(args.gpu_id)) if args.gpu_id is not None else '1',
         '--dtype', dtype,
         '--max-model-len', str(args.max_tokens),
