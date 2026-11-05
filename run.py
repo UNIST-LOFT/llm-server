@@ -12,7 +12,8 @@ MODELS = {
     'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',
     'qwen-3-coder': 'nvidia/Qwen3-Coder-480B-A35B-Instruct-NVFP4', # quantized
     'glm-4.6': 'bullpoint/GLM-4.6-AWQ', # quantized
-    'minimax-m3.1-flash': 'MiniMaxAI/MiniMax-M3.1-Flash'
+    'minimax-m3.1-flash': 'MiniMaxAI/MiniMax-M3.1-Flash',
+    'qwen-3.8': 'Qwen/Qwen3.8-27B'
 }
 
 if __name__ == "__main__":
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     if args.enable_tool:
         cmd += ['--enable-auto-tool-choice']
         if 'qwen' in args.model:
-            cmd += ['--tool-call-parser', 'qwen3_coder']
+            cmd += ['--tool-call-parser', 'qwen3_coder', '--reasoning-parser', 'qwen3']
         if 'glm' in args.model:
             cmd += ['--tool-call-parser', 'glm45', '--reasoning-parser', 'glm45']
         if 'minimax' in args.model:
