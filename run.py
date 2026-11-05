@@ -12,6 +12,7 @@ MODELS = {
     'deepseek-v4-flash': 'deepseek-ai/DeepSeek-V4-Flash',
     'qwen-3-coder': 'nvidia/Qwen3-Coder-480B-A35B-Instruct-NVFP4', # quantized
     'glm-4.6': 'bullpoint/GLM-4.6-AWQ', # quantized
+    'minimax-m3.1-flash': 'MiniMaxAI/MiniMax-M3.1-Flash'
 }
 
 if __name__ == "__main__":
@@ -79,6 +80,10 @@ if __name__ == "__main__":
             cmd += ['--tool-call-parser', 'qwen3_coder']
         if 'glm' in args.model:
             cmd += ['--tool-call-parser', 'glm45', '--reasoning-parser', 'glm45']
+        if 'minimax' in args.model:
+            cmd += ['--reasoning-parser', 'minimax_m3', '--kv-cache-dtype', 'fp8',
+                    '--attention-config', '{"indexer_kv_dtype": "fp8"}',
+                    '--tool-call-parser', 'minimax_m3']
 
     logger.info(f"Starting LLM server with command: {' '.join(cmd)}")
     res = subprocess.run(cmd)
