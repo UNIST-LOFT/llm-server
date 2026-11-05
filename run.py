@@ -75,6 +75,8 @@ if __name__ == "__main__":
         cmd += ['--kv-cache-dtype', 'fp8']
     elif args.model == 'qwen-3-coder':
         cmd += ['--quantization', 'fp8']
+    elif args.model == 'qwen-3.8':
+        cmd.remove('--enable-expert-parallel')
     if args.enable_tool:
         cmd += ['--enable-auto-tool-choice']
         if 'qwen' in args.model:
