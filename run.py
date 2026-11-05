@@ -81,7 +81,8 @@ if __name__ == "__main__":
         if 'glm' in args.model:
             cmd += ['--tool-call-parser', 'glm45', '--reasoning-parser', 'glm45']
         if 'minimax' in args.model:
-            cmd += ['--reasoning-parser', 'minimax_m3',
+            cmd += ['--reasoning-parser', 'minimax_m3', '--kv-cache-dtype', 'auto',
+                    '--moe-backend', 'marlin', '--disable-hybrid-kv-cache-manager',
                     '--tool-call-parser', 'minimax_m3']
 
     logger.info(f"Starting LLM server with command: {' '.join(cmd)}")
