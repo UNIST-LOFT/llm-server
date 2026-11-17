@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import subprocess
+import sys
 
 MODELS = {
     'llama-4-scout': 'meta-llama/Llama-4-Scout-17B-16E-Instruct',
@@ -94,3 +95,4 @@ if __name__ == "__main__":
         logger.error(f"LLM server exited with code {res.returncode}")
     else:
         logger.info("LLM server exited successfully")
+    sys.exit(res.returncode)
